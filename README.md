@@ -1,21 +1,99 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## About
+This library help to validate your input field and show errors list.
+## Installation
+For installation use npm:
+ `npm install git+ssh://git@github.com/maxiadlovskii/react-input-validator.git --save`
+## Usage
+### Input field
+For using `Input` with validation just import it from  `react-input-validator`and add validations rules as a props
+ 
+    import { Input } from 'react-input-validator'
+    const rules = [{
+        required: true,
+        message: 'This field is required'
+    }]
+    export const MyInput = props => <Input trigger={'onChange'} rules={rules}/>;
+    
 
+This code validate input when `onChange` trigger appear 
+
+    trigger 'onChange' | 'onBlur'
+### Rules
+`rules` is `object[]`Includes validation rules.<br/> 
+Each rule could has next keys:<br/> 
+`message` - `string|ReactNode` validation error message. When not specified, a default value appears.<br/> 
+`required` - `Boolean` means is field required<br/> 
+ `regExp` - `string`   validate from a regular expression<br/> 
+`min` - `number` validate a min value of a field<br/> 
+`max`- `number` validate a max value of a field<br/> 
+`validator` - `function(value) => Boolean` custom validate function which should return `true` when value pass<br/> 
+f.e.
+
+    const rules = [  
+	        {required: true, message: 'This field is required'},  
+		      {max: 70},  
+	        {min: 20},  
+	        {regExp: '^(0|[1-9]\\d*)([.,]\\d+)?',message: 'Field should be a number'},  
+	        {validator: value => Number(value) === 30,message: 'Value should be 30'}  
+        ];
+### Styling
+Its possible to add styles using css modules 
+
+    import { Input as CustomInput } from 'react-input-validator'  
+    import styles from './Input.module.scss'  
+      
+    export const Input = props => <CustomInput cssModule={styles} {...props}/>;
+  In  `Input.module.scss` You should use next class names:<br/> 
+  `.errors` - error container<br/> 
+  `.error` - error item<br/> 
+  `.input` - input field<br/> 
+f.e.
+
+    .errors {  
+      list-style: none;  
+      font-size: 15px;  
+      color: red;  
+    }
+You could also use props `inputClassName, errorsClassName, errorClassName` for adding some special styles or use direct styles `'.my-validated-input',  '.my-validated-input__errors',  '.my-validated-input__error'`
+
+### All Input props
+`rules`  `object[]` validation rules ,<br/>     
+`trigger` `'onChange' | 'onBlur'`,<br/>   
+`onErrors` `function(errors)` - callback runs then field has errors,<br/>   
+`cssModule`  `object` - imported file with styles,<br/>   
+`inputClassName` - `string` - input field className ,<br/>   
+`errorsClassName` - `string` - error list className,<br/>   
+`errorClassName` - `string` - error className,<br/>   
+`showError` - `Boolean`  flag if show error list ( default: true),<br/> 
+### Hook
+For using hook import it from `react-input-validator`
+
+    import {useSingleValidation} from 'react-input-validator';
+    
+    const rules = [{
+        required: true,
+        message: 'This field is required'
+    }]
+    const trigger = 'onChange'
+    export const Input = () => {
+    		const {  
+    		  onTrigger,  
+    		  errors,
+    		  forceValidation  
+    		} = useSingleValidation({ trigger, rules });
+    		return <input onChange={onTrigger.onChange}/>
+    }
+`forceValidation`  - `function(value)` run validation with `value`<br/> 
+`errors` `string|ReactNode[]` - validation errors<br/> 
+`onTrigger` `function{}` - hendlers which sould be added to `<input />`  tag <br/> 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm run watch`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Runs the file watcher. After changes, run build.   
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
@@ -26,43 +104,3 @@ The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
